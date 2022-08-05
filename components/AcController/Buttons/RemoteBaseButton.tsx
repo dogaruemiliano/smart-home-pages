@@ -11,6 +11,8 @@ import Animated, {
   FadeOut,
   FlipInEasyX,
   FlipOutEasyX,
+  SlideInLeft,
+  SlideOutLeft,
   RollInLeft,
   RollOutLeft,
 } from "react-native-reanimated";
@@ -45,8 +47,8 @@ const RemoteBaseButton: React.FC<{
 
   return (
     <Animated.View
-      entering={entering ? entering : RollInLeft}
-      exiting={exiting ? exiting : RollOutLeft}
+      entering={entering ? entering : SlideInLeft}
+      exiting={exiting ? exiting : SlideOutLeft}
       style={[
         styles.component,
         {
