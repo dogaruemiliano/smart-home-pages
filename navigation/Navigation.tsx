@@ -31,7 +31,10 @@ const AuthenticatedStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary },
+        headerStyle: {
+          backgroundColor: Colors.primary,
+        },
+        headerShadowVisible: false,
         headerTintColor: Colors.neutral,
         contentStyle: { backgroundColor: Colors.primary },
       }}

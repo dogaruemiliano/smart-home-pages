@@ -57,7 +57,11 @@ const RemoteBaseButton: React.FC<{
         },
       ]}
     >
-      <Pressable onPress={handlePress} onLongPress={onLongPress} style={[]}>
+      <Pressable
+        onPress={handlePress}
+        onLongPress={onLongPress}
+        style={{ borderWidth: 0 }}
+      >
         {!empty && children}
       </Pressable>
     </Animated.View>
@@ -84,6 +88,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowOffset: { height: 4, width: 0 },
     elevation: 1,
+    outlineWidth: 0,
   },
   text: {
     color: Colors.neutral,
