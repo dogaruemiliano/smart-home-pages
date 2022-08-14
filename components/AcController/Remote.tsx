@@ -1,14 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@store";
 import AcButtons from "./Buttons";
 import AcDisplay from "./Display";
-import { Colors } from "@constants/styles";
 
 const Remote: React.FC<{}> = (props) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   return (
     <View style={styles.component}>
       <AcDisplay />

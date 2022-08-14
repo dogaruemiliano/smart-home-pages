@@ -1,21 +1,21 @@
 import React from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store";
 import { Colors } from "@constants/styles";
 import { AsyncThunk } from "@reduxjs/toolkit";
-import Animated, {
-  BaseAnimationBuilder,
-  EntryExitAnimationFunction,
-  FadeIn,
-  FadeOut,
-  FlipInEasyX,
-  FlipOutEasyX,
-  SlideInLeft,
-  SlideOutLeft,
-  RollInLeft,
-  RollOutLeft,
-} from "react-native-reanimated";
+// import Animated, {
+//   BaseAnimationBuilder,
+//   EntryExitAnimationFunction,
+//   FadeIn,
+//   FadeOut,
+//   FlipInEasyX,
+//   FlipOutEasyX,
+//   SlideInLeft,
+//   SlideOutLeft,
+//   RollInLeft,
+//   RollOutLeft,
+// } from "react-native-reanimated";
 
 const RemoteBaseButton: React.FC<{
   children?: any;
@@ -46,9 +46,9 @@ const RemoteBaseButton: React.FC<{
   };
 
   return (
-    <Animated.View
-      entering={entering ? entering : SlideInLeft}
-      exiting={exiting ? exiting : SlideOutLeft}
+    <View
+      // entering={entering ? entering : SlideInLeft}
+      // exiting={exiting ? exiting : SlideOutLeft}
       style={[
         styles.component,
         {
@@ -64,7 +64,7 @@ const RemoteBaseButton: React.FC<{
       >
         {!empty && children}
       </Pressable>
-    </Animated.View>
+    </View>
   );
 };
 
