@@ -1,21 +1,21 @@
 {
   "files": {
-    "app.js": "/expo-gh-pages/static/js/app.c7f6a30a.chunk.js",
-    "app.js.map": "/expo-gh-pages/static/js/app.c7f6a30a.chunk.js.map",
-    "runtime~app.js": "/expo-gh-pages/static/js/runtime~app.3dbcb4f3.js",
-    "runtime~app.js.map": "/expo-gh-pages/static/js/runtime~app.3dbcb4f3.js.map",
-    "static/js/2.675acb05.chunk.js": "/expo-gh-pages/static/js/2.675acb05.chunk.js",
-    "static/js/2.675acb05.chunk.js.map": "/expo-gh-pages/static/js/2.675acb05.chunk.js.map",
-    "favicon-16.png": "/expo-gh-pages/favicon-16.png",
-    "favicon-32.png": "/expo-gh-pages/favicon-32.png",
-    "favicon.ico": "/expo-gh-pages/favicon.ico",
-    "index.html": "/expo-gh-pages/index.html",
-    "manifest.json": "/expo-gh-pages/manifest.json",
-    "serve.json": "/expo-gh-pages/serve.json",
-    "static/js/2.675acb05.chunk.js.LICENSE.txt": "/expo-gh-pages/static/js/2.675acb05.chunk.js.LICENSE.txt"
+    "app.js": "/smart-home-pages/static/js/app.c7f6a30a.chunk.js",
+    "app.js.map": "/smart-home-pages/static/js/app.c7f6a30a.chunk.js.map",
+    "runtime~app.js": "/smart-home-pages/static/js/runtime~app.50f79d4c.js",
+    "runtime~app.js.map": "/smart-home-pages/static/js/runtime~app.50f79d4c.js.map",
+    "static/js/2.675acb05.chunk.js": "/smart-home-pages/static/js/2.675acb05.chunk.js",
+    "static/js/2.675acb05.chunk.js.map": "/smart-home-pages/static/js/2.675acb05.chunk.js.map",
+    "favicon-16.png": "/smart-home-pages/favicon-16.png",
+    "favicon-32.png": "/smart-home-pages/favicon-32.png",
+    "favicon.ico": "/smart-home-pages/favicon.ico",
+    "index.html": "/smart-home-pages/index.html",
+    "manifest.json": "/smart-home-pages/manifest.json",
+    "serve.json": "/smart-home-pages/serve.json",
+    "static/js/2.675acb05.chunk.js.LICENSE.txt": "/smart-home-pages/static/js/2.675acb05.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime~app.3dbcb4f3.js",
+    "static/js/runtime~app.50f79d4c.js",
     "static/js/2.675acb05.chunk.js",
     "static/js/app.c7f6a30a.chunk.js"
   ]
