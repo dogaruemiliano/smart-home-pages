@@ -49,13 +49,7 @@ const RemoteBaseButton: React.FC<{
     <View
       // entering={entering ? entering : SlideInLeft}
       // exiting={exiting ? exiting : SlideOutLeft}
-      style={[
-        styles.component,
-        {
-          borderColor: empty ? Colors.transparent : Colors.neutral,
-          backgroundColor: empty ? Colors.transparent : Colors.secondary,
-        },
-      ]}
+      style={componentStyle(empty)}
     >
       <Pressable
         onPress={handlePress}
@@ -68,28 +62,33 @@ const RemoteBaseButton: React.FC<{
   );
 };
 
-export const styles = StyleSheet.create({
-  component: {
-    flex: 1,
-    width: 112,
-    maxWidth: 112,
-    height: 64,
-    maxHeight: 64,
-    backgroundColor: Colors.secondary,
-    borderWidth: 1,
-    borderRadius: 8,
-    // marginVertical: 24,
-    // margin: '15%'
-    // marginVertical: Dimensions.get("window").height * 0.03,
-    padding: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowRadius: 8,
-    shadowOpacity: 0.4,
-    shadowOffset: { height: 4, width: 0 },
-    elevation: 1,
-    outlineWidth: 0,
-  },
+const componentStyle = (isEmpty: boolean | undefined) => {
+  const stl = StyleSheet.create({
+    component: {
+      flex: 1,
+      width: 112,
+      maxWidth: 112,
+      height: 64,
+      maxHeight: 64,
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: 8,
+      justifyContent: "center",
+      alignItems: "center",
+      shadowRadius: isEmpty ? 0 : 8,
+      shadowOpacity: isEmpty ? 0 : 0.4,
+      shadowOffset: { height: 4, width: 0 },
+      elevation: isEmpty ? 0 : 1,
+      outlineWidth: 0,
+      borderColor: isEmpty ? Colors.transparent : Colors.neutral,
+      backgroundColor: isEmpty ? Colors.transparent : Colors.secondary,
+    },
+  });
+
+  return stl.component;
+};
+
+const styles = StyleSheet.create({
   text: {
     color: Colors.neutral,
   },
