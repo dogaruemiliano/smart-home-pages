@@ -4,7 +4,7 @@
   "lang": "en",
   "name": "smart_home_app",
   "short_name": "smart_home_app",
-  "start_url": "/",
+  "start_url": "/smart-home-pages",
   "orientation": "portrait",
   "icons": [
     {
