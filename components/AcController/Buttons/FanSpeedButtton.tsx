@@ -14,8 +14,6 @@ const FanSpeedButton: React.FC<{}> = (props) => {
     <RemoteBaseButton
       dispatchAction={changeFanSpeed}
       empty={!isOn}
-      entering={SlideInRight}
-      exiting={SlideOutRight}
     >
       <FontAwesome5 name="fan" size={48} color={Colors.neutral} />
     </RemoteBaseButton>

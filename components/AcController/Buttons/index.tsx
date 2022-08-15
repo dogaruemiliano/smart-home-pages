@@ -15,27 +15,26 @@ const AcButtons: React.FC<{}> = (props) => {
   return (
     <>
       <View style={styles.buttons}>
-        {isOn ? (
-          <>
-            <View style={styles.buttonsColumn}>
-              <TemperatureUpButton />
-              <TemperatureDownButton />
-              <ModeButton />
-            </View>
-            <View style={styles.buttonsColumn}>
-              <PowerButton />
-              <FanSpeedButton />
-              <RemoteBaseButton empty={true} />
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.buttonsColumn}></View>
-            <View style={styles.buttonsColumn}>
-              <PowerButton />
-            </View>
-          </>
-        )}
+        <>
+          <View style={styles.buttonsColumn}>
+            {isOn && (
+              <>
+                <TemperatureUpButton />
+                <TemperatureDownButton />
+                <ModeButton />
+              </>
+            )}
+          </View>
+          <View style={styles.buttonsColumn}>
+            <PowerButton />
+            {isOn && (
+              <>
+                <FanSpeedButton />
+                <View style={styles.emptySpace}></View>
+              </>
+            )}
+          </View>
+        </>
       </View>
     </>
   );
@@ -58,6 +57,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  emptySpace: {
+    width: 128,
+    height: 64,
   },
 });
 

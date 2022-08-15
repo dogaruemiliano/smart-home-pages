@@ -14,7 +14,6 @@ const TemperatureUpButton: React.FC<{}> = (props) => {
 
   return (
     <RemoteBaseButton
-      onPress={handlePress}
       dispatchAction={raiseTemperature}
       empty={!isOn}
       // entering={SlideInRight}

@@ -9,14 +9,9 @@ import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 const PowerButton: React.FC<{}> = (props) => {
   const isOn = useSelector((state: RootState) => state.ac.settings.power);
 
-  const handlePress = () => console.log("PowerButton");
-
   return (
     <RemoteBaseButton
-      onPress={handlePress}
       dispatchAction={isOn ? turnOff : turnOn}
-      // entering={SlideInRight}
-      // exiting={SlideOutRight}
     >
       {isOn ? (
         <Image

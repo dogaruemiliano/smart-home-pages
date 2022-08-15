@@ -6,7 +6,6 @@ import { RootState } from "@store";
 import { changeMode } from "@store/slices/ac";
 import RemoteBaseButton from "./RemoteBaseButton";
 import { Colors } from "@constants/styles";
-import { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 const ModeButton: React.FC<{}> = (props) => {
   const isOn = useSelector((state: RootState) => state.ac.settings.power);
@@ -14,11 +13,8 @@ const ModeButton: React.FC<{}> = (props) => {
   const handlePress = () => console.log("ModeButton");
   return (
     <RemoteBaseButton
-      onPress={handlePress}
       dispatchAction={changeMode}
       empty={!isOn}
-      // entering={SlideInDown}
-      // exiting={SlideOutDown}
     >
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>

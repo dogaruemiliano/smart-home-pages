@@ -1,34 +1,36 @@
 import React from "react";
 import { View, Pressable, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@store";
 import { Colors } from "@constants/styles";
 import { AsyncThunk } from "@reduxjs/toolkit";
 
 const RemoteBaseButton: React.FC<{
   children?: any;
-  onPress?: () => void;
-  onLongPress?: () => void;
-  dispatchAction?: AsyncThunk<void, void, {}>;
+  dispatchAction: AsyncThunk<void, boolean | undefined, {}>;
   empty?: boolean;
 }> = (props) => {
-  const { children, onPress, onLongPress, dispatchAction, empty } = props;
+  const { children, dispatchAction, empty } = props;
   const dispatch = useDispatch<AppDispatch>();
+  const isCorrectionMode = useSelector(
+    (state: RootState) => state.ac.correctionMode
+  );
 
   const handlePress = () => {
-    if (!empty) {
-      onPress && onPress();
-      dispatchAction && dispatch(dispatchAction());
-    }
+    dispatch(dispatchAction(isCorrectionMode));
+  };
+
+  const handleLongPress = () => {
+    dispatch(dispatchAction(true));
   };
 
   return (
     <Pressable
       onPress={handlePress}
-      onLongPress={onLongPress}
+      onLongPress={handleLongPress}
       style={componentStyle(empty)}
     >
-      {!empty && children}
+      {children}
     </Pressable>
   );
 };

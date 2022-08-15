@@ -25,15 +25,8 @@ const styles = StyleSheet.create({
   up: {
     transform: [{ rotate: "0deg" }],
   },
-  right: {
-    transform: [{ rotate: "90deg" }],
-  },
-
   down: {
     transform: [{ rotate: "180deg" }],
-  },
-  left: {
-    transform: [{ rotate: "270deg" }],
   },
 });
 
