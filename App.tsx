@@ -5,16 +5,17 @@ import { Provider } from "react-redux";
 import { Colors } from "./constants/styles";
 import { store } from "./store";
 import Navigation from "./navigation/Navigation";
+import { useLayoutEffect } from "react";
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="light" />
-        <Provider store={store}>
-          <Navigation />
-        </Provider>
-      </SafeAreaView>
+      {/* <SafeAreaView style={styles.container}> */}
+      <StatusBar style="light" />
+      <Provider store={store}>
+        <Navigation />
+      </Provider>
+      {/* </SafeAreaView> */}
     </SafeAreaProvider>
   );
 }

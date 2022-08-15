@@ -26,7 +26,6 @@ const homeSlice = createSlice({
       const index = state.rooms.findIndex(
         (room: Room) => room.properties.id === action.payload.roomId
       );
-      debugger;
       state.rooms[index].properties.isLightOn =
         !state.rooms[index].properties.isLightOn;
     },

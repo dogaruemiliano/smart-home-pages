@@ -1,23 +1,34 @@
 import * as SecureStore from "expo-secure-store";
 import { AuthStateData } from "../../services/auth/authApi";
+import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { initialState as emptyState } from "@store/slices/auth";
 
 export const getAuthDataFromSecureAsync = async () => {
-  return {
-    username: (await SecureStore.getItemAsync("username")) || "",
-    token: (await SecureStore.getItemAsync("token")) || "",
-    tokenType: (await SecureStore.getItemAsync("tokenType")) || "",
-    refreshToken: (await SecureStore.getItemAsync("refreshToken")) || "",
-    createdAt: parseInt((await SecureStore.getItemAsync("createdAt")) || ""),
-    expiresIn: parseInt((await SecureStore.getItemAsync("expiresIn")) || ""),
-    isLoading: !!((await SecureStore.getItemAsync("isLoading")) || ""),
-  } as AuthStateData;
+  const storeMethod =
+    Platform.OS === "web" ? AsyncStorage.getItem : SecureStore.getItemAsync;
+
+  try {
+    const storedValue = await storeMethod("authData");
+    console.log(storedValue);
+    if (storedValue !== null) {
+      const AuthData = JSON.parse(storedValue);
+      return AuthData as AuthStateData;
+    }
+  } catch (err: any) {
+    console.log(err);
+  }
+
+  return null;
 };
 
 export const storeAuthDataToSecureAsync = async (authData: AuthStateData) => {
+  const storeMethod =
+    Platform.OS === "web" ? AsyncStorage.setItem : SecureStore.setItemAsync;
+
+  const stringValue = JSON.stringify(authData);
   try {
-    for (const [key, value] of Object.entries(authData)) {
-      const result = await SecureStore.setItemAsync(key, value.toString());
-    }
+    await storeMethod("authData", stringValue);
   } catch (err: any) {
     return false;
   }
