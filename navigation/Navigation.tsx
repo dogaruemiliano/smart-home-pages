@@ -8,10 +8,21 @@ import ProfileScreen from "../screens/ProfileScreen";
 import AcRemoteScreen from "../screens/AcRemoteScreen";
 import { isAuthenticated } from "../services/auth/authApi";
 import { getAuthDataFromSecureAsync } from "../services/auth/localAuth";
-import { RootState } from "../store";
-import { setState } from "../store/slices/auth";
+import { AppDispatch, RootState } from "../store";
+import { checkLoginData, setState } from "../store/slices/auth";
+import {
+  createDrawerNavigator,
+  DrawerContent,
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  DrawerToggleButton,
+} from "@react-navigation/drawer";
+import { useLayoutEffect } from "react";
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const AuthStack = () => {
   return (
@@ -19,6 +30,7 @@ const AuthStack = () => {
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary },
         headerTintColor: Colors.neutral,
+        headerShadowVisible: false,
         contentStyle: { backgroundColor: Colors.primary },
       }}
     >
@@ -27,32 +39,55 @@ const AuthStack = () => {
   );
 };
 
-const AuthenticatedStack = () => {
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   return (
-    <Stack.Navigator
+    <DrawerContentScrollView>
+      {/* <DrawerItemList /> */}
+      <DrawerContent {...props} />
+      <DrawerItem
+        label="Logout"
+        inactiveTintColor={Colors.danger}
+        onPress={() => console.log("LOGOUT")}
+      />
+    </DrawerContentScrollView>
+  );
+};
+
+const AuthenticatedDrawer = () => {
+  return (
+    <Drawer.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: Colors.primary,
         },
         headerShadowVisible: false,
         headerTintColor: Colors.neutral,
-        contentStyle: { backgroundColor: Colors.primary },
+        drawerContentStyle: { backgroundColor: Colors.secondary },
+        sceneContainerStyle: { backgroundColor: Colors.primary },
+        headerLeft: () => <DrawerToggleButton tintColor={Colors.secondary} />,
       }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Stack.Screen name="AcRemote" component={AcRemoteScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-    </Stack.Navigator>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Air Conditioner" component={AcRemoteScreen} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} />
+    </Drawer.Navigator>
   );
 };
 
 const Navigation = () => {
   // check secure storage for token
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const isLoggedIn = useSelector((state: RootState) =>
+    isAuthenticated(state.auth)
+  );
+
   const getDataFromLocalStorage = async () => {
     const authData = await getAuthDataFromSecureAsync();
     // if token is present
-    if (authData.token) {
+    console.log("authData in navigation", authData);
+    if (authData && authData.token) {
       // - if token is valid then store it in state
       if (isAuthenticated(authData)) {
         setState(authData);
@@ -64,13 +99,14 @@ const Navigation = () => {
     }
   };
 
-  const isLoggedIn = useSelector((state: RootState) =>
-    isAuthenticated(state.auth)
-  );
+  useLayoutEffect(() => {
+    // getDataFromLocalStorage();
+    dispatch(checkLoginData())
+  }, []);
 
   return (
     <NavigationContainer>
-      {isLoggedIn || true ? <AuthenticatedStack /> : <AuthStack />}
+      {isLoggedIn ? <AuthenticatedDrawer /> : <AuthStack />}
     </NavigationContainer>
   );
 };
