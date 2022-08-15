@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/smart-home-pages/static/js/app.b92ad031.chunk.js",
-    "app.js.map": "/smart-home-pages/static/js/app.b92ad031.chunk.js.map",
+    "app.js": "/smart-home-pages/static/js/app.abb29dc9.chunk.js",
+    "app.js.map": "/smart-home-pages/static/js/app.abb29dc9.chunk.js.map",
     "runtime~app.js": "/smart-home-pages/static/js/runtime~app.50f79d4c.js",
     "runtime~app.js.map": "/smart-home-pages/static/js/runtime~app.50f79d4c.js.map",
     "static/js/2.87ae97cc.chunk.js": "/smart-home-pages/static/js/2.87ae97cc.chunk.js",
@@ -34,6 +34,6 @@
   "entrypoints": [
     "static/js/runtime~app.50f79d4c.js",
     "static/js/2.87ae97cc.chunk.js",
-    "static/js/app.b92ad031.chunk.js"
+    "static/js/app.abb29dc9.chunk.js"
   ]
 }
