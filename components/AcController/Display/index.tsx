@@ -8,19 +8,23 @@ import Mode from "./Mode";
 import { Colors } from "@constants/styles";
 
 const AcDisplay: React.FC<{}> = (props) => {
-  const state = useSelector((state: RootState) => state.ac.settings);
+  const state = useSelector((state: RootState) => state.ac);
+
   return (
     <View style={styles.component}>
-      {state.power ? (
+      {state.settings.power ? (
         <>
           <Temperature />
           <View style={styles.bottomBar}>
             <Fan />
+            {state.correctionMode && (
+              <Text style={styles.infoText}>CORRECTION MODE!</Text>
+            )}
             <Mode />
           </View>
         </>
       ) : (
-        <Text style={styles.text}>Turn me on, baby!</Text>
+        <Text style={styles.offText}>Turn me on, baby!</Text>
       )}
     </View>
   );
@@ -48,9 +52,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
   },
-  text: {
+  offText: {
     fontSize: 32,
     color: Colors.neutral,
+  },
+  infoText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlignVertical: "center",
+    color: Colors.warning,
   },
 });
 

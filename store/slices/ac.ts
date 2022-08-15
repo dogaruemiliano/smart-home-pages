@@ -4,35 +4,38 @@ import {
   acModes,
   AcSettings,
 } from "@constants/ac_settings";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  AsyncThunk,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { Alert } from "react-native";
 
-export const raiseTemperature = createAsyncThunk("home/raiseTemperature", () =>
-  console.log("raiseTemperature")
-);
-export const lowerTemperature = createAsyncThunk("home/lowerTemperature", () =>
-  console.log("lowerTemperature")
-);
-export const turnOn = createAsyncThunk("home/turnOn", () =>
-  console.log("turnOn")
-);
-export const turnOff = createAsyncThunk("home/turnOff", () =>
-  console.log("turnOff")
-);
-export const changeFanSpeed = createAsyncThunk("home/changeFanSpeed", () =>
-  console.log("changeFanSpeed")
-);
-export const changeMode = createAsyncThunk("home/changeMode", () =>
-  console.log("changeMode")
-);
+const createAcAsyncThunk = (action: string) =>
+  createAsyncThunk(`ac/${action}`, async (correction: boolean | undefined) => {
+    if (!correction) {
+      console.log(`${action} on the server`);
+    }
+    console.log(`${action} in the state`);
+  });
+
+export const raiseTemperature = createAcAsyncThunk("raiseTemperature");
+export const lowerTemperature = createAcAsyncThunk("lowerTemperature");
+export const turnOn = createAcAsyncThunk("turnOn");
+export const turnOff = createAcAsyncThunk("turnOff");
+export const changeFanSpeed = createAcAsyncThunk("changeFanSpeed");
+export const changeMode = createAcAsyncThunk("changeMode");
 
 type AcState = {
   isLoading: boolean;
+  correctionMode: boolean;
   settings: AcSettings;
 };
 
 const initialState: AcState = {
   isLoading: true,
+  correctionMode: false,
   settings: {
     power: false,
     mode: "cool",
@@ -51,12 +54,8 @@ const acSlice = createSlice({
   name: "ac",
   initialState,
   reducers: {
-    setState(state, action: PayloadAction<AcState>) {
-      // for (const key in Object.keys(state)) {
-      //   state[key] = action.payload[key]
-      // }
-      // state.ac.power = { power: false };
-      // TODO maybe set from server
+    toggleCorrectionMode(state: AcState) {
+      state.correctionMode = !state.correctionMode;
     },
   },
   extraReducers: (builder) => {
@@ -64,7 +63,7 @@ const acSlice = createSlice({
     builder.addCase(turnOn.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(turnOn.fulfilled, (state, action) => {
+    builder.addCase(turnOn.fulfilled, (state) => {
       state.settings.power = true;
       state.isLoading = false;
     });
@@ -173,6 +172,6 @@ const acSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setState } = acSlice.actions;
+export const { toggleCorrectionMode } = acSlice.actions;
 
 export default acSlice.reducer;
