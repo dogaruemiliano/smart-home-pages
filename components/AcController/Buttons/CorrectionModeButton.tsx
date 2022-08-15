@@ -15,7 +15,7 @@ const CorrectionModeButton: React.FC<{}> = (props) => {
     <Pressable onPress={handlePress} style={styles.component}>
       <Ionicons
         name={isCorrectionMode ? "ios-settings" : "ios-settings-outline"}
-        size={32}
+        size={24}
         color={Colors.secondary}
       />
     </Pressable>
@@ -23,7 +23,9 @@ const CorrectionModeButton: React.FC<{}> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  component: {},
+  component: {
+    paddingHorizontal: 11,
+  },
 });
 
 export default CorrectionModeButton;
