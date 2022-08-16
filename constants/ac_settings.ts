@@ -19,7 +19,7 @@ export type AcSettings = {
   power: AcPower;
   mode: AcMode;
   fanSpeed: AcFanSpeed;
-  temperature: AcTemperature;
+  temperatures: AcTemperature;
 };
 
 export const acAvailableTemperature = (mode: AcMode) => {

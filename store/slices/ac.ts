@@ -4,26 +4,25 @@ import {
   acModes,
   AcSettings,
 } from "@constants/ac_settings";
-import {
-  AsyncThunk,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { BASE_URL } from "@constants/api";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { camelCaseToSnakeCase } from "@services/conversions";
 import { Alert } from "react-native";
 
 const createAcAsyncThunk = (action: string) =>
   createAsyncThunk(`ac/${action}`, async (correction: boolean | undefined) => {
     if (!correction) {
-      console.log(`${action} on the server`);
+      try {
+        const response = fetch(BASE_URL + camelCaseToSnakeCase(action), {method: "POST"})
+      }
     }
+    // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
     console.log(`${action} in the state`);
   });
 
 export const raiseTemperature = createAcAsyncThunk("raiseTemperature");
 export const lowerTemperature = createAcAsyncThunk("lowerTemperature");
-export const turnOn = createAcAsyncThunk("turnOn");
-export const turnOff = createAcAsyncThunk("turnOff");
+export const togglePower = createAcAsyncThunk("togglePower");
 export const changeFanSpeed = createAcAsyncThunk("changeFanSpeed");
 export const changeMode = createAcAsyncThunk("changeMode");
 
@@ -39,7 +38,7 @@ const initialState: AcState = {
   settings: {
     power: false,
     mode: "cool",
-    temperature: {
+    temperatures: {
       cool: 21,
       dry: 21,
       heat: 28,
@@ -57,33 +56,26 @@ const acSlice = createSlice({
     toggleCorrectionMode(state: AcState) {
       state.correctionMode = !state.correctionMode;
     },
+    methodFromReducer(state: AcState, action: PayloadAction<AcSettings>) {
+      console.log("payload", action.payload);
+      const data = action.payload;
+
+      state.settings.power = data.power;
+      state.settings.mode = data.mode;
+      state.settings.fanSpeed = data.fanSpeed;
+      state.settings.temperatures = data.temperatures;
+    },
   },
   extraReducers: (builder) => {
-    // turnOn
-    builder.addCase(turnOn.pending, (state) => {
+    // togglePower
+    builder.addCase(togglePower.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(turnOn.fulfilled, (state) => {
-      state.settings.power = true;
+    builder.addCase(togglePower.fulfilled, (state, action) => {
+      state.settings.power = !state.settings.power;
       state.isLoading = false;
     });
-    builder.addCase(turnOn.rejected, (state, action) => {
-      console.log(action);
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
-      state.isLoading = false;
-    });
-
-    // turnOff
-    builder.addCase(turnOff.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(turnOff.fulfilled, (state, action) => {
-      state.settings.power = false;
-      state.isLoading = false;
-    });
-    builder.addCase(turnOff.rejected, (state, action) => {
+    builder.addCase(togglePower.rejected, (state, action) => {
       console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
@@ -97,10 +89,10 @@ const acSlice = createSlice({
     });
     builder.addCase(raiseTemperature.fulfilled, (state) => {
       const tempLimit = acAvailableTemperature(state.settings.mode)?.max;
-      const temp = state.settings.temperature[state.settings.mode];
+      const temp = state.settings.temperatures[state.settings.mode];
 
       if (tempLimit && temp && temp < tempLimit) {
-        state.settings.temperature[state.settings.mode] += 1;
+        state.settings.temperatures[state.settings.mode] += 1;
       }
       state.isLoading = false;
     });
@@ -118,10 +110,10 @@ const acSlice = createSlice({
     });
     builder.addCase(lowerTemperature.fulfilled, (state) => {
       const tempLimit = acAvailableTemperature(state.settings.mode)?.min;
-      const temp = state.settings.temperature[state.settings.mode];
+      const temp = state.settings.temperatures[state.settings.mode];
 
       if (tempLimit && temp && temp > tempLimit) {
-        state.settings.temperature[state.settings.mode] -= 1;
+        state.settings.temperatures[state.settings.mode] -= 1;
       }
       state.isLoading = false;
     });
@@ -172,6 +164,6 @@ const acSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleCorrectionMode } = acSlice.actions;
+export const { toggleCorrectionMode, methodFromReducer } = acSlice.actions;
 
 export default acSlice.reducer;

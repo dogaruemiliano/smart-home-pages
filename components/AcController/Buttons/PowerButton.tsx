@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, StyleSheet } from "react-native";
-import { turnOn, turnOff } from "@store/slices/ac";
+import { togglePower } from "@store/slices/ac";
 import RemoteBaseButton from "./RemoteBaseButton";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
@@ -10,9 +10,7 @@ const PowerButton: React.FC<{}> = (props) => {
   const isOn = useSelector((state: RootState) => state.ac.settings.power);
 
   return (
-    <RemoteBaseButton
-      dispatchAction={isOn ? turnOff : turnOn}
-    >
+    <RemoteBaseButton dispatchAction={togglePower}>
       {isOn ? (
         <Image
           source={require("../../../assets/icons/off.png")}

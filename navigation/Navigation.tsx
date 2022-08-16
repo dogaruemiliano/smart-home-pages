@@ -9,7 +9,7 @@ import AcRemoteScreen from "../screens/AcRemoteScreen";
 import { isAuthenticated } from "../services/auth/authApi";
 import { getAuthDataFromSecureAsync } from "../services/auth/localAuth";
 import { AppDispatch, RootState } from "../store";
-import { checkLoginData, setState } from "../store/slices/auth";
+import { checkLoginData } from "../store/slices/auth";
 import {
   createDrawerNavigator,
   DrawerContent,
@@ -19,7 +19,10 @@ import {
   DrawerItemList,
   DrawerToggleButton,
 } from "@react-navigation/drawer";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { hideAsync } from "expo-splash-screen";
+import { WEBSOCKET_ENDPOINT } from "@constants/api";
+import { methodFromReducer } from "@store/slices/ac";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,41 +71,67 @@ const AuthenticatedDrawer = () => {
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Air Conditioner" component={AcRemoteScreen} />
+      <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
     </Drawer.Navigator>
   );
 };
 
 const Navigation = () => {
-  // check secure storage for token
   const dispatch = useDispatch<AppDispatch>();
+  const [isReady, setIsReady] = useState(false);
+
+  const ws = useRef(new WebSocket(WEBSOCKET_ENDPOINT)).current;
 
   const isLoggedIn = useSelector((state: RootState) =>
     isAuthenticated(state.auth)
   );
 
-  const getDataFromLocalStorage = async () => {
-    const authData = await getAuthDataFromSecureAsync();
-    // if token is present
-    console.log("authData in navigation", authData);
-    if (authData && authData.token) {
-      // - if token is valid then store it in state
-      if (isAuthenticated(authData)) {
-        setState(authData);
-      } else {
-        // - else call refresh token function
-        console.log("Calling refresh function because token is expired");
-      }
-      // else don't do anything
-    }
-  };
-
   useLayoutEffect(() => {
-    // getDataFromLocalStorage();
-    dispatch(checkLoginData())
+    const setup = async () => {
+      await dispatch(checkLoginData());
+
+      setIsReady(true);
+      hideAsync();
+    };
+
+    setup();
   }, []);
+
+  useEffect(() => {
+    ws.onopen = () => {
+      // connection opened
+      console.log("connected");
+      ws.send(
+        '{"command":"subscribe","identifier": "{\\"channel\\":\\"AirConditionerChannel\\"}"}'
+      );
+    };
+
+    ws.onmessage = (e) => {
+      // a message was received
+      const data = JSON.parse(e.data);
+      console.log(data);
+      if (data.message?.state) {
+        console.log("passed if check")
+        dispatch(methodFromReducer(data.message.state));
+      }
+    };
+
+    ws.onerror = (e) => {
+      // an error occurred
+      console.log(e);
+    };
+
+    ws.onclose = (e) => {
+      // connection closed
+      console.log(e.code, e.reason);
+    };
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <NavigationContainer>
