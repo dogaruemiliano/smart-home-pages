@@ -12,9 +12,11 @@ import { Alert } from "react-native";
 const createAcAsyncThunk = (action: string) =>
   createAsyncThunk(`ac/${action}`, async (correction: boolean | undefined) => {
     if (!correction) {
-      try {
-        const response = fetch(BASE_URL + camelCaseToSnakeCase(action), {method: "POST"})
-      }
+      // try {
+      //   const response = fetch(BASE_URL + camelCaseToSnakeCase(action), {method: "POST", headers: {
+      //     Authorization: 
+      //   }})
+      // }
     }
     // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
     console.log(`${action} in the state`);
