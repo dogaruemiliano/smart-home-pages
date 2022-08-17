@@ -16,8 +16,14 @@ const RemoteBaseButton: React.FC<{
     (state: RootState) => state.ac.correctionMode
   );
 
+  const isLoading = useSelector(
+    (state: RootState) => state.ac.isLoading
+  );
+
   const handlePress = () => {
-    dispatch(dispatchAction(isCorrectionMode));
+    if (!isLoading){
+      dispatch(dispatchAction(isCorrectionMode));
+    }
   };
 
   const handleLongPress = () => {

@@ -128,8 +128,8 @@ const Navigation = () => {
     ws.onmessage = (e) => {
       // a message was received
       const data = JSON.parse(e.data);
+      console.log(data);
       if (data.message?.state && data.message.user !== username) {
-        console.log(data);
         console.log("passed if check");
         dispatch(setAcState(data.message.state));
       }
