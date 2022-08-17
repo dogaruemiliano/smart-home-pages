@@ -39,7 +39,7 @@ const homeSlice = createSlice({
     //   state.rooms = action.payload
     // });
     // builder.addCase(fetchData.rejected, (state, action) => {
-    //   console.log(action);
+    //   ;
     //   Alert.alert("There was an error", action.error.message, [
     //     { text: "Close", style: "cancel" },
     //   ]);

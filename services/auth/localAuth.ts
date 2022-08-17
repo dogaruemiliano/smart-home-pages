@@ -22,7 +22,7 @@ export const getAuthDataFromSecureAsync = async () => {
   return null;
 };
 
-export const storeAuthDataToSecureAsync = async (authData: AuthStateData) => {
+export const storeAuthDataToSecureAsync = async (authData: AuthStateData | null) => {
   const storeMethod =
     Platform.OS === "web" ? AsyncStorage.setItem : SecureStore.setItemAsync;
 

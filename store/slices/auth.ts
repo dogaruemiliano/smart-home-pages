@@ -1,33 +1,74 @@
+import { AuthData } from "@components/auth/AuthForm";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Alert } from "react-native";
+import { Alert, AppState } from "react-native";
+import { AppDispatch, RootState } from "..";
 import {
   AuthStateData,
+  isAuthenticated,
   loginWithPassword,
+  loginWithRefreshToken,
   PasswordCredentials,
+  RefreshTokenCredentials,
 } from "../../services/auth/authApi";
 import {
   getAuthDataFromSecureAsync,
   storeAuthDataToSecureAsync,
 } from "../../services/auth/localAuth";
 
-export const checkLoginData = createAsyncThunk(
-  "auth/checkLoginData",
-  async () => {
-    try {
-      const savedAuthData = await getAuthDataFromSecureAsync();
-      return savedAuthData || initialState;
-    } catch (err: any) {
-      throw new Error(err);
-    }
-  }
-);
+// export const checkLoginData = createAsyncThunk<
+//   AuthStateData | undefined,
+//   boolean,
+//   { dispatch: AppDispatch }
+// >(`ac/checkLoginData`, async (tr = true, thunkApi) => {
+//   try {
+//     const savedAuthData = await getAuthDataFromSecureAsync();
+
+//     if (savedAuthData && isAuthenticated(savedAuthData)) {
+//       return savedAuthData;
+//     } else if (savedAuthData?.refreshToken) {
+//       thunkApi.dispatch(
+//         refreshToken({
+//           refresh_token: savedAuthData.refreshToken,
+//           username: savedAuthData.username,
+//         })
+//       );
+//     }
+//   } catch (err: any) {
+//     console.log(err);
+//     throw new Error(err.message);
+//   }
+//   // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
+//   // console.log(`${action} in the state`);
+// });
 
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials: PasswordCredentials) => {
     try {
       const authData = await loginWithPassword(credentials);
-      await storeAuthDataToSecureAsync(authData);
+      storeAuthDataToSecureAsync(authData);
+
+      return authData;
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  }
+);
+
+export const refreshToken = createAsyncThunk<
+  AuthStateData,
+  RefreshTokenCredentials | undefined,
+  { state: RootState }
+>(
+  "auth/refreshToken",
+  async (credentials: RefreshTokenCredentials | undefined, thunkApi) => {
+    try {
+      const credentialsFromState = thunkApi.getState().auth;
+      const authData = await loginWithRefreshToken(
+        credentials || credentialsFromState
+      );
+      storeAuthDataToSecureAsync(authData);
+
       return authData;
     } catch (err: any) {
       throw new Error(err);
@@ -36,7 +77,7 @@ export const login = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-  storeAuthDataToSecureAsync(initialState);
+  storeAuthDataToSecureAsync(null);
 });
 
 export const initialState: AuthStateData = {
@@ -53,46 +94,49 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setState(state, action: PayloadAction<AuthStateData>) {
-      state = action.payload;
+    setAuthState(state, action: PayloadAction<AuthStateData>) {
+      state.username = action.payload.username;
       state.token = action.payload.token;
+      state.tokenType = action.payload.tokenType;
+      state.refreshToken = action.payload.refreshToken;
+      state.createdAt = action.payload.createdAt;
+      state.expiresIn = action.payload.expiresIn;
     },
   },
   extraReducers: (builder) => {
-    // Check login data
-    builder.addCase(checkLoginData.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(checkLoginData.fulfilled, (state, action) => {
-      state.createdAt = action.payload.createdAt;
-      state.expiresIn = action.payload.expiresIn;
-      state.token = action.payload.token;
-      state.refreshToken = action.payload.refreshToken;
-      state.tokenType = action.payload.tokenType;
-      state.isLoading = false;
-    });
-    builder.addCase(checkLoginData.rejected, (state, action) => {
-      console.log(action);
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
-      state.isLoading = false;
-    });
     // Login
     builder.addCase(login.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(login.fulfilled, (state, action) => {
+      console.log("login.fullfilled");
       state.createdAt = action.payload.createdAt;
       state.expiresIn = action.payload.expiresIn;
       state.token = action.payload.token;
       state.refreshToken = action.payload.refreshToken;
       state.tokenType = action.payload.tokenType;
-      storeAuthDataToSecureAsync(action.payload);
       state.isLoading = false;
     });
     builder.addCase(login.rejected, (state, action) => {
-      console.log(action);
+      Alert.alert("There was an error", action.error.message, [
+        { text: "Close", style: "cancel" },
+      ]);
+      state.isLoading = false;
+    });
+
+    // refreshToken
+    builder.addCase(refreshToken.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.createdAt = action.payload.createdAt;
+      state.expiresIn = action.payload.expiresIn;
+      state.token = action.payload.token;
+      state.refreshToken = action.payload.refreshToken;
+      state.tokenType = action.payload.tokenType;
+      state.isLoading = false;
+    });
+    builder.addCase(refreshToken.rejected, (state, action) => {
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -100,6 +144,9 @@ const authSlice = createSlice({
     });
 
     //Logout
+    builder.addCase(logout.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(logout.fulfilled, (state) => {
       state.createdAt = initialState.createdAt;
       state.expiresIn = initialState.expiresIn;
@@ -116,6 +163,6 @@ const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setState } = authSlice.actions;
+export const { setAuthState } = authSlice.actions;
 
 export default authSlice.reducer;

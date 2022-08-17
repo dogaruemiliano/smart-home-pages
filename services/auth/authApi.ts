@@ -19,14 +19,30 @@ export type AuthResponseData = {
   expires_in: number;
 };
 export type PasswordCredentials = { username: string; password: string };
+export type RefreshTokenCredentials = {
+  refreshToken: string;
+  username: string;
+};
 
 export const loginWithPassword = async (credentials: PasswordCredentials) => {
-  return sendAuthRequest(credentials, true);
+  return sendAuthRequest(credentials);
 };
 
-export const signupWithPassword = async (credentials: PasswordCredentials) => {
-  return sendAuthRequest(credentials, false);
+export const loginWithRefreshToken = async (
+  credentials: RefreshTokenCredentials
+) => {
+  return sendAuthRequest(
+    {
+      refresh_token: credentials.refreshToken,
+      username: credentials.username,
+    },
+    "refresh_token"
+  );
 };
+
+// export const signupWithPassword = async (credentials: PasswordCredentials) => {
+//   return sendAuthRequest(credentials, false);
+// };
 
 export const isAuthenticated = (authData: AuthStateData) => {
   return authData.token && authData.createdAt + authData.expiresIn > Date.now();
@@ -43,10 +59,13 @@ const responseDataToAuthData = (data: AuthResponseData) =>
   } as AuthStateData);
 
 const sendAuthRequest = async (
-  credentials: PasswordCredentials,
-  isLogin: boolean
+  credentials:
+    | PasswordCredentials
+    | { refresh_token: string; username: string },
+  // isLogin: boolean,
+  grantType?: string
 ) => {
-  const URL = BASE_URL + (isLogin ? "oauth/token" : "users");
+  const URL = BASE_URL + "oauth/token"; //(isLogin ? "oauth/token" : "users");
   const response = await fetch(URL, {
     method: "POST",
     headers: {
@@ -55,7 +74,7 @@ const sendAuthRequest = async (
     body: JSON.stringify({
       ...credentials,
       client_id: CLIENT_ID,
-      grant_type: "password",
+      grant_type: grantType || "password",
     }),
   });
 
@@ -66,9 +85,8 @@ const sendAuthRequest = async (
   }
 
   const data = await response.json();
-
   const authData = responseDataToAuthData({
-    ...(isLogin ? data : data.user),
+    ...data, //...(isLogin ? data : data.user),
     username: credentials.username,
   });
   return authData;

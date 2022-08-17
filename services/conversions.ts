@@ -1,3 +1,3 @@
-export const camelCaseToSnakeCase = (str: string) => {
-  str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-}
+export const camelCaseToSnakeCaseStr = (str: string) => {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+};

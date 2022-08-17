@@ -9,7 +9,7 @@ import AcRemoteScreen from "../screens/AcRemoteScreen";
 import { isAuthenticated } from "../services/auth/authApi";
 import { getAuthDataFromSecureAsync } from "../services/auth/localAuth";
 import { AppDispatch, RootState } from "../store";
-import { checkLoginData } from "../store/slices/auth";
+import { refreshToken, setAuthState } from "../store/slices/auth";
 import {
   createDrawerNavigator,
   DrawerContent,
@@ -22,7 +22,7 @@ import {
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { hideAsync } from "expo-splash-screen";
 import { WEBSOCKET_ENDPOINT } from "@constants/api";
-import { methodFromReducer } from "@store/slices/ac";
+import { setAcState } from "@store/slices/ac";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -90,7 +90,23 @@ const Navigation = () => {
 
   useLayoutEffect(() => {
     const setup = async () => {
-      await dispatch(checkLoginData());
+      const savedAuthData = await getAuthDataFromSecureAsync();
+      // check if data from local storage is present
+      if (savedAuthData && savedAuthData?.refreshToken) {
+        console.log("saved data is present");
+        // check if is still valid
+        if (isAuthenticated(savedAuthData)) {
+          // store it in state
+          console.log("saved data is still valid");
+          await dispatch(setAuthState(savedAuthData));
+          // else use refresh token
+        } else {
+          console.log("saved data is not valid, using refresh token");
+          await dispatch(refreshToken(savedAuthData));
+        }
+      }
+      // store response data in state
+      // hide splash screen
 
       setIsReady(true);
       hideAsync();
@@ -111,21 +127,21 @@ const Navigation = () => {
     ws.onmessage = (e) => {
       // a message was received
       const data = JSON.parse(e.data);
-      console.log(data);
       if (data.message?.state) {
-        console.log("passed if check")
-        dispatch(methodFromReducer(data.message.state));
+        console.log(data);
+        console.log("passed if check");
+        dispatch(setAcState(data.message.state));
       }
     };
 
     ws.onerror = (e) => {
       // an error occurred
-      console.log(e);
+      // console.log(e);
     };
 
     ws.onclose = (e) => {
       // connection closed
-      console.log(e.code, e.reason);
+      // console.log(e.code, e.reason);
     };
   }, []);
 

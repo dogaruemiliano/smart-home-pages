@@ -1,23 +1,28 @@
 import React, { useLayoutEffect } from "react";
 import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Navigation from "@navigation/Navigation";
 import CorrectionModeButton from "@components/AcController/Buttons/CorrectionModeButton";
 import Remote from "@components/AcController/Remote";
-import { RootState } from "@store";
+import { AppDispatch, RootState } from "@store";
 import { RootStackParamList } from "./types";
+import { fetchAcState } from "@store/slices/ac";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Profile">;
 
 const AcRemoteScreen: React.FC<Props> = (props) => {
   const { navigation } = props;
+  const dispatch = useDispatch<AppDispatch>()
   const isOn = useSelector((state: RootState) => state.ac.settings.power);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => isOn && <CorrectionModeButton />,
     });
+
+    dispatch(fetchAcState())
+
   }, [isOn, navigation]);
   return <Remote />;
 };

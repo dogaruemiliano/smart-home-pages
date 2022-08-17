@@ -6,17 +6,50 @@ import {
 } from "@constants/ac_settings";
 import { BASE_URL } from "@constants/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { camelCaseToSnakeCase } from "@services/conversions";
+import { isAuthenticated } from "@services/auth/authApi";
+import { camelCaseToSnakeCaseStr } from "@services/conversions";
 import { Alert } from "react-native";
+import { AppDispatch, RootState } from "..";
+import { refreshToken } from "./auth";
 
 const createAcAsyncThunk = (action: string) =>
-  createAsyncThunk(`ac/${action}`, async (correction: boolean | undefined) => {
-    if (!correction) {
-      // try {
-      //   const response = fetch(BASE_URL + camelCaseToSnakeCase(action), {method: "POST", headers: {
-      //     Authorization: 
-      //   }})
-      // }
+  createAsyncThunk<
+    void,
+    boolean | undefined,
+    { state: RootState; dispatch: AppDispatch }
+  >(`ac/${action}`, async (correction: boolean | undefined, thunkApi) => {
+    let AuthorizationStr = "";
+    if (isAuthenticated(thunkApi.getState().auth)) {
+      AuthorizationStr = "Bearer " + thunkApi.getState().auth.token;
+    } else {
+      await thunkApi.dispatch(refreshToken());
+      AuthorizationStr = "Bearer " + thunkApi.getState().auth.token;
+    }
+
+    try {
+      const response = await fetch(
+        BASE_URL + "api/v1/" + camelCaseToSnakeCaseStr(action),
+        {
+          method: "POST",
+          headers: {
+            Authorization: AuthorizationStr,
+          },
+          // body: {
+          //   correction: correction
+          // }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("fetch failed in createAcAsyncThunk");
+      }
+
+      const data = await response.json()
+      console.log(data)
+
+    } catch (err: any) {
+      console.log(err);
+      throw new Error(err.message);
     }
     // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
     console.log(`${action} in the state`);
@@ -27,6 +60,24 @@ export const lowerTemperature = createAcAsyncThunk("lowerTemperature");
 export const togglePower = createAcAsyncThunk("togglePower");
 export const changeFanSpeed = createAcAsyncThunk("changeFanSpeed");
 export const changeMode = createAcAsyncThunk("changeMode");
+
+export const fetchAcState = createAsyncThunk<AcSettings, boolean | undefined>(
+  `ac/fetchAcState`,
+  async () => {
+    try {
+      const response = await fetch(BASE_URL + "api/v1/ac");
+
+      if (!response.ok) {
+        throw new Error("ERROR: Getting the ac state from server failed");
+      }
+      const data = await response.json();
+
+      return data as AcSettings;
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+  }
+);
 
 type AcState = {
   isLoading: boolean;
@@ -58,8 +109,7 @@ const acSlice = createSlice({
     toggleCorrectionMode(state: AcState) {
       state.correctionMode = !state.correctionMode;
     },
-    methodFromReducer(state: AcState, action: PayloadAction<AcSettings>) {
-      console.log("payload", action.payload);
+    setAcState(state: AcState, action: PayloadAction<AcSettings>) {
       const data = action.payload;
 
       state.settings.power = data.power;
@@ -69,16 +119,36 @@ const acSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // fetchAcState
+    builder.addCase(fetchAcState.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchAcState.fulfilled, (state, action) => {
+      state.isLoading = false;
+
+      console.log("action.payload", action.payload);
+
+      state.settings.mode = action.payload.mode;
+      state.settings.fanSpeed = action.payload.fanSpeed;
+      state.settings.power = action.payload.power;
+      state.settings.temperatures = action.payload.temperatures;
+    });
+    builder.addCase(fetchAcState.rejected, (state, action) => {
+      Alert.alert("There was an error", action.error.message, [
+        { text: "Close", style: "cancel" },
+      ]);
+      state.isLoading = false;
+    });
+
     // togglePower
     builder.addCase(togglePower.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(togglePower.fulfilled, (state, action) => {
-      state.settings.power = !state.settings.power;
+      // state.settings.power = !state.settings.power;
       state.isLoading = false;
     });
     builder.addCase(togglePower.rejected, (state, action) => {
-      console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -94,12 +164,11 @@ const acSlice = createSlice({
       const temp = state.settings.temperatures[state.settings.mode];
 
       if (tempLimit && temp && temp < tempLimit) {
-        state.settings.temperatures[state.settings.mode] += 1;
+        // state.settings.temperatures[state.settings.mode] += 1;
       }
       state.isLoading = false;
     });
     builder.addCase(raiseTemperature.rejected, (state, action) => {
-      console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -115,12 +184,11 @@ const acSlice = createSlice({
       const temp = state.settings.temperatures[state.settings.mode];
 
       if (tempLimit && temp && temp > tempLimit) {
-        state.settings.temperatures[state.settings.mode] -= 1;
+        // state.settings.temperatures[state.settings.mode] -= 1;
       }
       state.isLoading = false;
     });
     builder.addCase(lowerTemperature.rejected, (state, action) => {
-      console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -135,11 +203,10 @@ const acSlice = createSlice({
       const index = acFanSpeeds.findIndex(
         (value) => value === state.settings.fanSpeed
       );
-      state.settings.fanSpeed = acFanSpeeds[(index + 1) % acFanSpeeds.length];
+      // state.settings.fanSpeed = acFanSpeeds[(index + 1) % acFanSpeeds.length];
       state.isLoading = false;
     });
     builder.addCase(changeFanSpeed.rejected, (state, action) => {
-      console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -152,11 +219,10 @@ const acSlice = createSlice({
     });
     builder.addCase(changeMode.fulfilled, (state) => {
       const index = acModes.findIndex((value) => value === state.settings.mode);
-      state.settings.mode = acModes[(index + 1) % acModes.length];
+      // state.settings.mode = acModes[(index + 1) % acModes.length];
       state.isLoading = false;
     });
     builder.addCase(changeMode.rejected, (state, action) => {
-      console.log(action);
       Alert.alert("There was an error", action.error.message, [
         { text: "Close", style: "cancel" },
       ]);
@@ -166,6 +232,6 @@ const acSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleCorrectionMode, methodFromReducer } = acSlice.actions;
+export const { toggleCorrectionMode, setAcState } = acSlice.actions;
 
 export default acSlice.reducer;
