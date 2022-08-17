@@ -22,7 +22,7 @@ import {
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { hideAsync } from "expo-splash-screen";
 import { WEBSOCKET_ENDPOINT } from "@constants/api";
-import { setAcState } from "@store/slices/ac";
+import { fetchAcState, setAcState } from "@store/slices/ac";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -106,6 +106,7 @@ const Navigation = () => {
           await dispatch(refreshToken(savedAuthData));
         }
       }
+      await dispatch(fetchAcState())
       // store response data in state
       // hide splash screen
 
@@ -131,8 +132,8 @@ const Navigation = () => {
       console.log(data);
       if (
         data.message?.state &&
-        data.message.user.toLowerCase() !== username.toLowerCase()
-      ) {
+        data.message.user !== username
+        ) {
         console.log("passed if check");
         dispatch(setAcState(data.message.state));
       }
@@ -147,7 +148,7 @@ const Navigation = () => {
       // connection closed
       // console.log(e.code, e.reason);
     };
-  }, []);
+  }, [username]);
 
   if (!isReady) {
     return null;

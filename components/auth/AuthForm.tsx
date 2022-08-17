@@ -36,6 +36,7 @@ const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
     credentialsInvalid;
 
   const updateInputValueHandler = (inputType: string, enteredValue: string) => {
+    console.log("updateInputValueHandler", enteredValue)
     setCredentials((credentials) => ({
       ...credentials,
       [inputType]: enteredValue,
@@ -46,7 +47,7 @@ const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
     try {
       // setIsLoading(true)
       onSubmit({
-        username: credentials.username,
+        username: credentials.username.toLowerCase(),
         password: credentials.password,
       }); 
       // setIsLoading(false)

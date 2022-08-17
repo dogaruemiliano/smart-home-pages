@@ -44,7 +44,6 @@ const createAcAsyncThunk = (action: string) =>
       );
 
       if (!response.ok) {
-        throw new Error("fetch failed in createAcAsyncThunk");
         return false;
       }
 
@@ -72,7 +71,7 @@ export const fetchAcState = createAsyncThunk<AcSettings, boolean | undefined>(
       const response = await fetch(BASE_URL + "api/v1/ac");
 
       if (!response.ok) {
-        throw new Error("ERROR: Getting the ac state from server failed");
+        throw new Error("Getting the ac state from server failed");
       }
       const data = await response.json();
 
@@ -95,13 +94,7 @@ const initialState: AcState = {
   settings: {
     power: false,
     mode: "cool",
-    temperatures: {
-      cool: 21,
-      dry: 21,
-      heat: 28,
-      auto: 22,
-      fan: 0,
-    },
+    temperature: 20,
     fanSpeed: "low",
   },
 };
@@ -115,11 +108,10 @@ const acSlice = createSlice({
     },
     setAcState(state: AcState, action: PayloadAction<AcSettings>) {
       const data = action.payload;
-
       state.settings.power = data.power;
       state.settings.mode = data.mode;
       state.settings.fanSpeed = data.fanSpeed;
-      state.settings.temperatures = data.temperatures;
+      state.settings.temperature = data.temperature;
     },
   },
   extraReducers: (builder) => {
@@ -132,7 +124,7 @@ const acSlice = createSlice({
         state.settings.mode = action.payload.mode;
         state.settings.fanSpeed = action.payload.fanSpeed;
         state.settings.power = action.payload.power;
-        state.settings.temperatures = action.payload.temperatures;
+        state.settings.temperature = action.payload.temperature;
       }
       state.isLoading = false;
     });
@@ -166,10 +158,9 @@ const acSlice = createSlice({
     });
     builder.addCase(raiseTemperature.fulfilled, (state, action) => {
       const tempLimit = acAvailableTemperature(state.settings.mode)?.max;
-      const temp = state.settings.temperatures[state.settings.mode];
-
+      const temp = state.settings.temperature;
       if (action.payload && tempLimit && temp && temp < tempLimit) {
-        state.settings.temperatures[state.settings.mode] += 1;
+        state.settings.temperature += 1;
       }
       state.isLoading = false;
     });
@@ -186,10 +177,10 @@ const acSlice = createSlice({
     });
     builder.addCase(lowerTemperature.fulfilled, (state, action) => {
       const tempLimit = acAvailableTemperature(state.settings.mode)?.min;
-      const temp = state.settings.temperatures[state.settings.mode];
+      const temp = state.settings.temperature;
 
       if (action.payload && tempLimit && temp && temp > tempLimit) {
-        state.settings.temperatures[state.settings.mode] -= 1;
+        state.settings.temperature -= 1;
       }
       state.isLoading = false;
     });
@@ -228,6 +219,13 @@ const acSlice = createSlice({
       const index = acModes.findIndex((value) => value === state.settings.mode);
       if (action.payload) {
         state.settings.mode = acModes[(index + 1) % acModes.length];
+        const tempLimits = acAvailableTemperature(state.settings.mode);
+        if (tempLimits && state.settings.temperature < tempLimits.min) {
+          state.settings.temperature = tempLimits?.min;
+        }
+        if (tempLimits && state.settings.temperature > tempLimits.max) {
+          state.settings.temperature = tempLimits.max;
+        }
       }
       state.isLoading = false;
     });

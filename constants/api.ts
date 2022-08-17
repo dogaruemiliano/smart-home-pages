@@ -1,4 +1,4 @@
-const CLIENT_ID_DEVELOPMENT = "1ViWd4hMouNkls6eBfzA81U_9unx-xX6qIB_40yq7lg"
+const CLIENT_ID_DEVELOPMENT = "mAdgCP-JjVcvWsn9-W-ugU1nUtTPMXe-pI5ismA5TnM"
 const CLIENT_ID_PRODUCTION = "XktIcTQzrWVW47ysq-d6h4Tg1NgAB8TFTvAadr8WSgk"
 export const CLIENT_ID = process.env.NODE_ENV === 'development' ? CLIENT_ID_DEVELOPMENT : CLIENT_ID_PRODUCTION
 

@@ -6,7 +6,7 @@ import { Colors } from "@constants/styles";
 
 const Temperature: React.FC<{}> = (props) => {
   const temperature = useSelector(
-    (state: RootState) => state.ac.settings.temperatures[state.ac.settings.mode]
+    (state: RootState) => state.ac.settings.temperature
   );
   const mode = useSelector((state: RootState) => state.ac.settings.mode);
   const [dynamicStyle, setDynamicStyle] = useState({});

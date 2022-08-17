@@ -11,15 +11,11 @@ export type AcTemperatureLimits = {
   max: number;
 };
 
-export type AcTemperature = {
-  [key in AcMode]: number;
-};
-
 export type AcSettings = {
   power: AcPower;
   mode: AcMode;
   fanSpeed: AcFanSpeed;
-  temperatures: AcTemperature;
+  temperature: number;
 };
 
 export const acAvailableTemperature = (mode: AcMode) => {
@@ -27,7 +23,11 @@ export const acAvailableTemperature = (mode: AcMode) => {
   let t_max: number | null;
 
   switch (mode) {
-    case "cool" || "dry":
+    case "dry":
+      t_min = 19;
+      t_max = 30;
+      break;
+    case "cool":
       t_min = 19;
       t_max = 30;
       break;
