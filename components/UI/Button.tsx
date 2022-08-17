@@ -33,7 +33,7 @@ const Button: React.FC<Props> = ({
     >
       <View>
         {isLoading ? (
-          <ActivityIndicator size={"small"} color={Colors.neutral} />
+          <ActivityIndicator size={"small"} color={Colors.secondary} />
         ) : (
           <Text style={styles.buttonText}>{children}</Text>
         )}
