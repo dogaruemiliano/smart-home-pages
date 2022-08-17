@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/smart-home-pages/static/js/app.6d2f059e.chunk.js",
-    "app.js.map": "/smart-home-pages/static/js/app.6d2f059e.chunk.js.map",
+    "app.js": "/smart-home-pages/static/js/app.ef09851e.chunk.js",
+    "app.js.map": "/smart-home-pages/static/js/app.ef09851e.chunk.js.map",
     "runtime~app.js": "/smart-home-pages/static/js/runtime~app.50f79d4c.js",
     "runtime~app.js.map": "/smart-home-pages/static/js/runtime~app.50f79d4c.js.map",
-    "static/js/2.9e4dfc83.chunk.js": "/smart-home-pages/static/js/2.9e4dfc83.chunk.js",
-    "static/js/2.9e4dfc83.chunk.js.map": "/smart-home-pages/static/js/2.9e4dfc83.chunk.js.map",
+    "static/js/2.4a8ed101.chunk.js": "/smart-home-pages/static/js/2.4a8ed101.chunk.js",
+    "static/js/2.4a8ed101.chunk.js.map": "/smart-home-pages/static/js/2.4a8ed101.chunk.js.map",
     "fonts/AntDesign.ttf": "/smart-home-pages/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/smart-home-pages/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/smart-home-pages/./fonts/Feather.ttf",
@@ -24,7 +24,7 @@
     "index.html": "/smart-home-pages/index.html",
     "manifest.json": "/smart-home-pages/manifest.json",
     "serve.json": "/smart-home-pages/serve.json",
-    "static/js/2.9e4dfc83.chunk.js.LICENSE.txt": "/smart-home-pages/static/js/2.9e4dfc83.chunk.js.LICENSE.txt",
+    "static/js/2.4a8ed101.chunk.js.LICENSE.txt": "/smart-home-pages/static/js/2.4a8ed101.chunk.js.LICENSE.txt",
     "static/media/air-conditioner-colored.png": "/smart-home-pages/static/media/air-conditioner-colored.f53f3bbe.png",
     "static/media/cold.png": "/smart-home-pages/static/media/cold.28e49a1b.png",
     "static/media/hot.png": "/smart-home-pages/static/media/hot.a3bc03ae.png",
@@ -33,7 +33,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.50f79d4c.js",
-    "static/js/2.9e4dfc83.chunk.js",
-    "static/js/app.6d2f059e.chunk.js"
+    "static/js/2.4a8ed101.chunk.js",
+    "static/js/app.ef09851e.chunk.js"
   ]
 }
