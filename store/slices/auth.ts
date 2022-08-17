@@ -153,6 +153,7 @@ const authSlice = createSlice({
       state.token = initialState.token;
       state.refreshToken = initialState.refreshToken;
       state.tokenType = initialState.tokenType;
+      state.isLoading = false;
     });
     builder.addCase(logout.rejected, (state, action) => {
       Alert.alert("There was an error", action.error.message, [
