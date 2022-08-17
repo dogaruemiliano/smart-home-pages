@@ -87,6 +87,7 @@ const Navigation = () => {
   const isLoggedIn = useSelector((state: RootState) =>
     isAuthenticated(state.auth)
   );
+  const username = useSelector((state: RootState) => state.auth.username);
 
   useLayoutEffect(() => {
     const setup = async () => {
@@ -127,7 +128,7 @@ const Navigation = () => {
     ws.onmessage = (e) => {
       // a message was received
       const data = JSON.parse(e.data);
-      if (data.message?.state) {
+      if (data.message?.state && data.message.user !== username) {
         console.log(data);
         console.log("passed if check");
         dispatch(setAcState(data.message.state));
