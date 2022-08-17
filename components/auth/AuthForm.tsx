@@ -26,7 +26,7 @@ type AuthFormProps = React.FC<{
 
 const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
   const [credentials, setCredentials] = useState({
-    username: "Username#1",
+    username: "User1",
     password: "admin123@",
   });
 
