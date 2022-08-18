@@ -26,7 +26,6 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.rootContainer}>
-      
       <FloorPlan />
     </View>
   );

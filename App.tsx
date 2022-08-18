@@ -13,12 +13,10 @@ preventAutoHideAsync();
 export default function App() {
   return (
     <SafeAreaProvider>
-      {/* <SafeAreaView style={styles.container}> */}
       <StatusBar style="light" />
       <Provider store={store}>
         <Navigation />
       </Provider>
-      {/* </SafeAreaView> */}
     </SafeAreaProvider>
   );
 }

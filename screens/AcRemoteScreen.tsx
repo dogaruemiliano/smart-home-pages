@@ -2,7 +2,6 @@ import React, { useLayoutEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Navigation from "@navigation/Navigation";
 import CorrectionModeButton from "@components/AcController/Buttons/CorrectionModeButton";
 import Remote from "@components/AcController/Remote";
 import { AppDispatch, RootState } from "@store";

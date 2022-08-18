@@ -6,6 +6,7 @@ import {
 } from "@constants/ac_settings";
 import { BASE_URL } from "@constants/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchAuthorized } from "@services/ac/apiCalls";
 import { isAuthenticated } from "@services/auth/authApi";
 import { camelCaseToSnakeCaseStr } from "@services/conversions";
 import { Alert } from "react-native";
@@ -18,37 +19,20 @@ const createAcAsyncThunk = (action: string) =>
     boolean | undefined,
     { state: RootState; dispatch: AppDispatch }
   >(`ac/${action}`, async (correction: boolean | undefined, thunkApi) => {
-    let AuthorizationStr = "";
+    let token = "";
     if (isAuthenticated(thunkApi.getState().auth)) {
-      AuthorizationStr = "Bearer " + thunkApi.getState().auth.token;
+      token = "Bearer " + thunkApi.getState().auth.token;
     } else {
       await thunkApi.dispatch(refreshToken());
-      AuthorizationStr = "Bearer " + thunkApi.getState().auth.token;
+      token = "Bearer " + thunkApi.getState().auth.token;
     }
 
     try {
-      const response = await fetch(
-        BASE_URL +
-          "api/v1/" +
-          camelCaseToSnakeCaseStr(action) +
-          `?user=${thunkApi.getState().auth.username}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: AuthorizationStr,
-          },
-          body: JSON.stringify({
-            user: thunkApi.getState().auth.username,
-          }),
-        }
-      );
+      const response = await fetchAuthorized(action, token);
 
       if (!response.ok) {
         return false;
       }
-
-      const data = await response.json();
-      console.log(data);
     } catch (err: any) {
       console.log(err);
       throw new Error(err.message);
