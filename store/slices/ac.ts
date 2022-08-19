@@ -7,11 +7,11 @@ import {
 import { BASE_URL } from "@constants/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchAuthorized } from "@services/ac/apiCalls";
-import { isAuthenticated } from "@services/auth/authApi";
+import { isAuthenticated, loginWithRefreshToken } from "@services/auth/authApi";
 import { camelCaseToSnakeCaseStr } from "@services/conversions";
 import { Alert } from "react-native";
 import { AppDispatch, RootState } from "..";
-import { refreshToken } from "./auth";
+import { refreshToken, setAuthState } from "./auth";
 
 const createAcAsyncThunk = (action: string) =>
   createAsyncThunk<
@@ -23,8 +23,9 @@ const createAcAsyncThunk = (action: string) =>
     if (isAuthenticated(thunkApi.getState().auth)) {
       token = "Bearer " + thunkApi.getState().auth.token;
     } else {
-      await thunkApi.dispatch(refreshToken());
-      token = "Bearer " + thunkApi.getState().auth.token;
+      const data = await loginWithRefreshToken({refreshToken: thunkApi.getState().auth.refreshToken, username: thunkApi.getState().auth.username})
+      thunkApi.dispatch(setAuthState(data))
+      token = "Bearer " + data.token;
     }
 
     try {

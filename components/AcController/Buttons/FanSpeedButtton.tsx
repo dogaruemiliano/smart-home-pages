@@ -5,7 +5,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Colors } from "@constants/styles";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
-import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 
 const FanSpeedButton: React.FC<{}> = (props) => {
   const isOn = useSelector((state: RootState) => state.ac.settings.power);

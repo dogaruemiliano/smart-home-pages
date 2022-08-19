@@ -5,9 +5,10 @@ import { AppDispatch, RootState } from "@store";
 import { Colors } from "@constants/styles";
 import { AsyncThunk } from "@reduxjs/toolkit";
 
+
 const RemoteBaseButton: React.FC<{
   children?: any;
-  dispatchAction: AsyncThunk<void, boolean | undefined, {}>;
+  dispatchAction: AsyncThunk<any, boolean | undefined, {}>;
   empty?: boolean;
 }> = (props) => {
   const { children, dispatchAction, empty } = props;
@@ -16,12 +17,10 @@ const RemoteBaseButton: React.FC<{
     (state: RootState) => state.ac.correctionMode
   );
 
-  const isLoading = useSelector(
-    (state: RootState) => state.ac.isLoading
-  );
+  const isLoading = useSelector((state: RootState) => state.ac.isLoading);
 
   const handlePress = () => {
-    if (!isLoading){
+    if (!isLoading) {
       dispatch(dispatchAction(isCorrectionMode));
     }
   };

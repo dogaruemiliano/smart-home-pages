@@ -17,12 +17,13 @@ const AcRemoteScreen: React.FC<Props> = (props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => isOn && <CorrectionModeButton />,
+      headerRight: () =>  <CorrectionModeButton />,
     });
 
     dispatch(fetchAcState())
 
   }, [isOn, navigation]);
+
   return <Remote />;
 };
 

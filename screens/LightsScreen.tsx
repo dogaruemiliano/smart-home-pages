@@ -13,7 +13,7 @@ import { Colors } from "../constants/styles";
 
 export type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-const HomeScreen: React.FC<Props> = (props) => {
+const LightsScreen: React.FC<Props> = (props) => {
   const { navigation } = props;
 
   useLayoutEffect(() => {
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default LightsScreen;

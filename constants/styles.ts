@@ -1,9 +1,10 @@
 export const Colors = {
   primary: "#011936",
-  primary100: "rgba(19,21,21, 0.5)",
+  primary100: "rgba(1, 25, 54, 0.3)",
   secondary: "#F4FFFD",
   warning: "#F9DC5C",
   danger: "#ED254E",
+  dangerLight: "#FDE9ED",
   neutral: "#011936",
   error100: "#F7A1B2",
   error500: "#EB1E47",
