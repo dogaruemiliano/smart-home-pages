@@ -26,8 +26,8 @@ type AuthFormProps = React.FC<{
 
 const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
   const [credentials, setCredentials] = useState({
-    username: "User1",
-    password: "admin123@",
+    username: process.env.NODE_ENV === 'development' ? "User1" : "",
+    password: process.env.NODE_ENV === 'development' ? "admin123@" : "",
   });
 
   const isLoading = useSelector((state: RootState) => state.auth.isLoading)
