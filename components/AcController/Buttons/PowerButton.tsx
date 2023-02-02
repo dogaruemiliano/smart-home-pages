@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Image, StyleSheet } from "react-native";
 import { togglePower } from "@store/slices/ac";
 import RemoteBaseButton from "./RemoteBaseButton";

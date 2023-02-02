@@ -13,35 +13,34 @@ const AcButtons: React.FC<{}> = (props) => {
   const isOn = useSelector((state: RootState) => state.ac.settings.power);
 
   return (
-    <>
-      <View style={styles.buttons}>
-        <>
-          <View style={styles.buttonsColumn}>
-            {isOn && (
-              <>
-                <TemperatureUpButton />
-                <TemperatureDownButton />
-                <ModeButton />
-              </>
-            )}
-          </View>
-          <View style={styles.buttonsColumn}>
-            <PowerButton />
-            {isOn && (
-              <>
-                <FanSpeedButton />
-                <View style={styles.emptySpace}></View>
-              </>
-            )}
-          </View>
-        </>
-      </View>
-    </>
+    <View style={styles.buttons}>
+      <>
+        <View style={styles.buttonsColumn}>
+          {isOn && (
+            <>
+              <TemperatureUpButton />
+              <TemperatureDownButton />
+              <ModeButton />
+            </>
+          )}
+        </View>
+        <View style={styles.buttonsColumn}>
+          <PowerButton />
+          {isOn && (
+            <>
+              <FanSpeedButton />
+              <View style={styles.emptySpace}></View>
+            </>
+          )}
+        </View>
+      </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   buttons: {
+    flex: 1,
     flexDirection: "row",
     width: "100%",
     height: "55%",

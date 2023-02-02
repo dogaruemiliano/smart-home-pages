@@ -26,7 +26,7 @@ type AuthFormProps = React.FC<{
 
 const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
   const [credentials, setCredentials] = useState({
-    username: process.env.NODE_ENV === 'development' ? "User1" : "",
+    username: process.env.NODE_ENV === 'development' ? "Emi" : "",
     password: process.env.NODE_ENV === 'development' ? "admin123@" : "",
   });
 
@@ -45,15 +45,12 @@ const AuthForm: AuthFormProps = ({ isLogin, onSubmit, credentialsInvalid }) => {
 
   const submitHandler = async () => {
     try {
-      // setIsLoading(true)
       onSubmit({
         username: credentials.username.toLowerCase(),
         password: credentials.password,
       }); 
-      // setIsLoading(false)
     } catch (err: any) {
       console.log(err)
-      // setIsLoading(false)
       throw new Error(err)
     }
   };

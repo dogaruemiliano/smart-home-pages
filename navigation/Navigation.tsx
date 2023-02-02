@@ -1,4 +1,4 @@
-import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { isAuthenticated } from "../services/auth/authApi";
 import { getAuthDataFromSecureAsync } from "../services/auth/localAuth";
@@ -10,12 +10,13 @@ import { WEBSOCKET_ENDPOINT } from "@constants/api";
 import { fetchAcState, setAcState } from "@store/slices/ac";
 import AuthStack from "./AuthStack";
 import AuthenticatedDrawer from "./AuthenticatedDrawer";
+import { fetchLightsData } from "@store/slices/lights";
 
 const Navigation = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [isReady, setIsReady] = useState(false);
 
-  const ws = useRef(new WebSocket(WEBSOCKET_ENDPOINT)).current;
+  // const ws = useRef(new WebSocket(WEBSOCKET_ENDPOINT)).current;
 
   const username = useSelector((state: RootState) => state.auth.username);
   const isLoggedIn = useSelector((state: RootState) =>
@@ -28,18 +29,21 @@ const Navigation = () => {
       // check if data from local storage is present
       if (savedAuthData && savedAuthData?.refreshToken) {
         console.log("saved data is present");
-        // check if is still valid
         if (isAuthenticated(savedAuthData)) {
-          // store it in state
           console.log("saved data is still valid");
           await dispatch(setAuthState(savedAuthData));
-          // else use refresh token
         } else {
           console.log("saved data is not valid, using refresh token");
-          await dispatch(refreshToken(savedAuthData));
+          try {
+            await dispatch(refreshToken(savedAuthData));
+          } catch (err: any) {
+            console.log(err.message);
+          }
         }
       }
+      console.log("fetchAcState in Navigation");
       await dispatch(fetchAcState());
+      await dispatch(fetchLightsData());
       // store response data in state
       // hide splash screen
 
@@ -92,4 +96,5 @@ const Navigation = () => {
     </NavigationContainer>
   );
 };
+
 export default Navigation;

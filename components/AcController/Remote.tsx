@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: "6%",
     marginVertical: "12%",
+    // maxWidth: 390,
+    // maxHeight: 753,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -14,12 +14,18 @@ const AcDisplay: React.FC<{}> = (props) => {
     <View style={styles.component}>
       {state.settings.power ? (
         <>
-          <Temperature />
-          <View style={styles.bottomBar}>
-            <Fan />
+          <View style={styles.leftContainer}>
+            <View style={styles.temperatureContainer}>
+              <Temperature />
+            </View>
+            <View style={styles.fanContainer}>
+              <Fan />
+            </View>
             {state.correctionMode && (
               <Text style={styles.infoText}>CORRECTION MODE!</Text>
             )}
+          </View>
+          <View style={styles.rightContainer}>
             <Mode />
           </View>
         </>
@@ -34,9 +40,9 @@ const styles = StyleSheet.create({
   component: {
     flex: 1,
     width: "100%",
-    padding: 32,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 16,
+    alignItems: "flex-end",
+    flexDirection: "row",
     backgroundColor: Colors.secondary,
     borderRadius: 8,
     shadowColor: "black",
@@ -45,12 +51,22 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4, width: 0 },
     elevation: 1,
   },
-  bottomBar: {
-    width: "100%",
-    height: 42,
+  leftContainer: {
+    flex: 4,
+    marginLeft: 32,
+    alignItems: "flex-start",
+    flexDirection: "column",
+  },
+  rightContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  temperatureContainer: {
+    flex: 4,
     marginTop: 32,
-    justifyContent: "space-between",
-    flexDirection: "row",
+  },
+  fanContainer: {
+    flex: 1,
   },
   offText: {
     fontSize: 32,

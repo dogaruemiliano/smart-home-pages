@@ -7,13 +7,13 @@ import Button from "@components/UI/Button";
 import Map from "./Map";
 import Building from "./Building";
 import Rooms from "./Rooms";
-import { Props as HomeScreenNavigationProps } from "../../../screens/HomeScreen";
+import { Props as LightsScreenNavigationProps } from "../../../screens/LightsScreen";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../screens/types";
 
 type NavProps = NativeStackNavigationProp<
   RootStackParamList,
-  "Home",
+  "Lights",
   undefined
 >;
 
@@ -31,15 +31,6 @@ const FloorPlan: React.FC<{}> = (props) => {
   // >
   return (
     <View style={styles.component}>
-      <Pressable
-        onPress={() => navigate("AcRemote")}
-        style={styles.imageContainer}
-      >
-        <Image
-          source={require("../../../assets/icons/air-conditioner-colored.png")}
-          style={styles.image}
-        />
-      </Pressable>
       <View>
         <Rooms />
         <Building />

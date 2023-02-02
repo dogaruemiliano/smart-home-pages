@@ -11,46 +11,37 @@ const Mode: React.FC<{}> = (props) => {
   return (
     <View style={styles.component}>
       {/* <Text style={styles.text}>Mode</Text> */}
-      {mode === "cool" && (
-        <FontAwesome5
-          name="snowflake"
-          size={32}
-          color={Colors.neutral}
-          // style={styles.icon}
-        />
-      )}
-      {mode === "dry" && (
-        <Ionicons
-          name="water"
-          size={32}
-          color={Colors.neutral}
-          // style={styles.icon}
-        />
-      )}
-      {mode === "fan" && (
-        <FontAwesome5
-          name="fan"
-          size={32}
-          color={Colors.neutral}
-          // style={styles.icon}
-        />
-      )}
-      {mode === "heat" && (
-        <FontAwesome5
-          name="sun"
-          size={32}
-          color={Colors.neutral}
-          // style={styles.icon}
-        />
-      )}
-      {mode === "auto" && (
-        <MaterialIcons
-          name="brightness-auto"
-          size={32}
-          color={Colors.neutral}
-          // style={styles.icon}
-        />
-      )}
+
+      <FontAwesome5
+        name="snowflake"
+        size={32}
+        color={mode === "cool" ? Colors.neutral : Colors.disabled}
+        style={styles.icon}
+      />
+      <Ionicons
+        name="water"
+        size={32}
+        color={mode === "dry" ? Colors.neutral : Colors.disabled}
+        style={styles.icon}
+      />
+      <FontAwesome5
+        name="fan"
+        size={32}
+        color={mode === "fan" ? Colors.neutral : Colors.disabled}
+        style={styles.icon}
+      />
+      <MaterialIcons
+        name="brightness-auto"
+        size={32}
+        color={mode === "auto" ? Colors.neutral : Colors.disabled}
+        style={styles.icon}
+      />
+      <FontAwesome5
+        name="sun"
+        size={32}
+        color={mode === "heat" ? Colors.neutral : Colors.disabled}
+        style={styles.icon}
+      />
     </View>
   );
 };
@@ -61,10 +52,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  // text: {
-  //   marginBottom: 6,
-  //   color: Colors.primary100,
-  // },
+  icon: {
+    margin: 6,
+  },
 });
 
 export default Mode;

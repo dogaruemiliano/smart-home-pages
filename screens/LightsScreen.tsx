@@ -10,19 +10,14 @@ import { AppDispatch } from "../store";
 import ProfileButton from "../components/user/ProfileButton";
 import FloorPlan from "../components/Home/FloorPlan/FloorPlan";
 import { Colors } from "../constants/styles";
+import { fetchLightsData, setLightsState } from "@store/slices/Lights";
+import { roomsData } from "@constants/floorPlanData";
 
-export type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+export type Props = NativeStackScreenProps<RootStackParamList, "Lights">;
 
 const LightsScreen: React.FC<Props> = (props) => {
   const { navigation } = props;
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <ProfileButton onPress={() => navigation.navigate("Profile")} />
-      ),
-    });
-  }, [navigation]);
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <View style={styles.rootContainer}>
@@ -34,6 +29,7 @@ const LightsScreen: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
+    padding: 16,
   },
   title: {
     fontSize: 20,

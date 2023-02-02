@@ -34,6 +34,7 @@ const RemoteBaseButton: React.FC<{
       onPress={handlePress}
       onLongPress={handleLongPress}
       style={componentStyle(empty)}
+      disabled={isLoading}
     >
       {children}
     </Pressable>

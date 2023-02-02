@@ -15,6 +15,7 @@ const FanSpeedButton: React.FC<{}> = (props) => {
       empty={!isOn}
     >
       <FontAwesome5 name="fan" size={48} color={Colors.neutral} />
+      
     </RemoteBaseButton>
   );
 };

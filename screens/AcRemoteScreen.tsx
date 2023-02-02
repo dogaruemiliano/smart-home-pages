@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from "@store";
 import { RootStackParamList } from "./types";
 import { fetchAcState } from "@store/slices/ac";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Profile">;
+type Props = NativeStackScreenProps<RootStackParamList, "AcRemote">;
 
 const AcRemoteScreen: React.FC<Props> = (props) => {
   const { navigation } = props;
@@ -19,10 +19,13 @@ const AcRemoteScreen: React.FC<Props> = (props) => {
     navigation.setOptions({
       headerRight: () =>  <CorrectionModeButton />,
     });
+  }, []);
 
-    dispatch(fetchAcState())
-
-  }, [isOn, navigation]);
+  useEffect(() => {
+    if (isOn) {
+      dispatch(fetchAcState())
+    }
+  }, [isOn])
 
   return <Remote />;
 };

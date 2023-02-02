@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
-import homeReducer from "./slices/home";
+import lightsReducer from "./slices/lights";
 import acReducer from "./slices/ac";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    home: homeReducer,
+    lights: lightsReducer,
     ac: acReducer
   },
 });

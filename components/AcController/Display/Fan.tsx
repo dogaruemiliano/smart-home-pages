@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, StyleSheet} from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { Colors } from "@constants/styles";
@@ -48,9 +48,9 @@ const Fan: React.FC<{}> = (props) => {
   return (
     <View style={styles.component}>
       <View
-        // style={{
-        //   transform: [{ rotate: spin }],
-        // }}
+      // style={{
+      //   transform: [{ rotate: spin }],
+      // }}
       >
         <FontAwesome5
           name="fan"
@@ -59,34 +59,36 @@ const Fan: React.FC<{}> = (props) => {
           style={styles.icon}
         />
       </View>
-      {(speed === "medium" || speed === "high") && (
-        <View
-          // style={{
-          //   transform: [{ rotate: spin }],
-          // }}
-        >
-          <FontAwesome5
-            name="fan"
-            size={24}
-            color={Colors.neutral}
-            style={styles.icon}
-          />
-        </View>
-      )}
-      {speed === "high" && (
-        <View
-          // style={{
-          //   transform: [{ rotate: spin }],
-          // }}
-        >
-          <FontAwesome5
-            name="fan"
-            size={32}
-            color={Colors.neutral}
-            style={styles.icon}
-          />
-        </View>
-      )}
+
+      <View
+      // style={{
+      //   transform: [{ rotate: spin }],
+      // }}
+      >
+        <FontAwesome5
+          name="fan"
+          size={24}
+          color={
+            speed === "medium" || speed === "high"
+              ? Colors.neutral
+              : Colors.disabled
+          }
+          style={styles.icon}
+        />
+      </View>
+
+      <View
+      // style={{
+      //   transform: [{ rotate: spin }],
+      // }}
+      >
+        <FontAwesome5
+          name="fan"
+          size={32}
+          color={speed === "high" ? Colors.neutral : Colors.disabled}
+          style={styles.icon}
+        />
+      </View>
     </View>
   );
 };
@@ -94,7 +96,7 @@ const Fan: React.FC<{}> = (props) => {
 const styles = StyleSheet.create({
   component: {
     flexDirection: "row",
-    height: "100%",
+    // height: "100%",
     alignItems: "flex-end",
     // justifyContent: 'flex-start'
   },
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     color: Colors.neutral,
   },
   icon: {
-    margin: 5,
+    margin: 6,
   },
 });
 

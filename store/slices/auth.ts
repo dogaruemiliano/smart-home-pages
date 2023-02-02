@@ -1,45 +1,16 @@
-import { AuthData } from "@components/auth/AuthForm";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Alert, AppState } from "react-native";
-import { AppDispatch, RootState } from "..";
+import { Alert } from "react-native";
+import { RootState } from "..";
 import {
   AuthStateData,
-  isAuthenticated,
   loginWithPassword,
   loginWithRefreshToken,
   PasswordCredentials,
   RefreshTokenCredentials,
 } from "../../services/auth/authApi";
 import {
-  getAuthDataFromSecureAsync,
   storeAuthDataToSecureAsync,
 } from "../../services/auth/localAuth";
-
-// export const checkLoginData = createAsyncThunk<
-//   AuthStateData | undefined,
-//   boolean,
-//   { dispatch: AppDispatch }
-// >(`ac/checkLoginData`, async (tr = true, thunkApi) => {
-//   try {
-//     const savedAuthData = await getAuthDataFromSecureAsync();
-
-//     if (savedAuthData && isAuthenticated(savedAuthData)) {
-//       return savedAuthData;
-//     } else if (savedAuthData?.refreshToken) {
-//       thunkApi.dispatch(
-//         refreshToken({
-//           refresh_token: savedAuthData.refreshToken,
-//           username: savedAuthData.username,
-//         })
-//       );
-//     }
-//   } catch (err: any) {
-//     console.log(err);
-//     throw new Error(err.message);
-//   }
-//   // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
-//   // console.log(`${action} in the state`);
-// });
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -67,6 +38,7 @@ export const refreshToken = createAsyncThunk<
       const authData = await loginWithRefreshToken(
         credentials || credentialsFromState
       );
+      console.log("AuthData", authData);
       storeAuthDataToSecureAsync(authData);
 
       return authData;
@@ -109,7 +81,7 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log("login.fullfilled");
+      state.username = action.payload.username;
       state.createdAt = action.payload.createdAt;
       state.expiresIn = action.payload.expiresIn;
       state.token = action.payload.token;
@@ -118,9 +90,13 @@ const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(login.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert(
+          "There was an error in AUTH reducer",
+          action.error.message,
+          [{ text: "Close", style: "cancel" }]
+        );
+      }
       state.isLoading = false;
     });
 
@@ -129,6 +105,7 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.username = action.payload.username;
       state.createdAt = action.payload.createdAt;
       state.expiresIn = action.payload.expiresIn;
       state.token = action.payload.token;
@@ -137,9 +114,13 @@ const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(refreshToken.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert(
+          "There was an error in AUTH reducer",
+          action.error.message,
+          [{ text: "Close", style: "cancel" }]
+        );
+      }
       state.isLoading = false;
     });
 
@@ -148,6 +129,7 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(logout.fulfilled, (state) => {
+      state.username = initialState.username;
       state.createdAt = initialState.createdAt;
       state.expiresIn = initialState.expiresIn;
       state.token = initialState.token;
@@ -156,9 +138,13 @@ const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(logout.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert(
+          "There was an error in AUTH reducer",
+          action.error.message,
+          [{ text: "Close", style: "cancel" }]
+        );
+      }
     });
   },
 });

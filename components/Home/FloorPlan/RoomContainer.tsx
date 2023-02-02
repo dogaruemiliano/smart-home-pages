@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Text, StyleSheet, Pressable, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@constants/styles";
 import Room from "@models/Room";
 import { RootState } from "@store";
-import { toggleLight } from "@store/slices/home";
+import { toggleLight } from "@store/slices/lights";
 
 const createPolygonPosition = (points: [number, number][]) => {
   const style = StyleSheet.create({
@@ -35,20 +36,22 @@ const createPolygonSize = (points: [number, number][]) => {
 const RoomContainer: React.FC<{
   coordinates: [number, number][];
   properties: { id: string; name: string; empty: boolean };
+  currentIndex: number
 }> = (props) => {
   const dispatch = useDispatch();
-  const { coordinates, properties } = props;
+  const { coordinates, properties, currentIndex } = props;
 
   const isLightOn = useSelector(
     (state: RootState) =>
-      !!state.home.rooms.find(
+      !!state.lights.rooms.find(
         (room: Room) => room.properties.id === properties.id
       )?.properties.isLightOn
   );
 
-  let backgroundColor = isLightOn ? Colors.light : undefined;
-  backgroundColor = properties.empty ? Colors.neutral : backgroundColor;
-
+  // let backgroundColor = isLightOn ? Colors.light : undefined;
+  const backgroundColor = properties.empty ? Colors.disabled : undefined;
+  console.log(properties.name)
+  console.log(currentIndex)
   return (
     <Pressable
       onPress={() => {
@@ -65,14 +68,25 @@ const RoomContainer: React.FC<{
           backgroundColor: backgroundColor,
         }}
       >
-        <Text
-          style={{
-            ...styles.label,
-            color: isLightOn ? Colors.primary : Colors.neutral,
-          }}
-        >
-          {properties.name}
-        </Text>
+        {!properties.empty && (
+          <>
+            {properties.name && (
+              <MaterialIcons
+                name={isLightOn ? "lightbulb" : "lightbulb-outline"}
+                color={isLightOn ? Colors.light : Colors.secondary}
+                size={24}
+              />
+            )}
+            {/* <Text
+              style={{
+                ...styles.label,
+                color: Colors.secondary,
+              }}
+            >
+              {properties.name}
+            </Text> */}
+          </>
+        )}
       </View>
     </Pressable>
   );

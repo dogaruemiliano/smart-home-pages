@@ -6,25 +6,51 @@ import { preventAutoHideAsync } from "expo-splash-screen";
 import { Colors } from "./constants/styles";
 import { store } from "./store";
 import Navigation from "./navigation/Navigation";
+import SimpleButtonOnOff from "./screens/SimpleButtonOnOff";
+import { useEffect, useRef } from "react";
+import { WEBSOCKET_ENDPOINT } from "@constants/api";
 
-// Prevent splash screen from 
-preventAutoHideAsync();
+// const ws = useRef(new WebSocket(WEBSOCKET_ENDPOINT, ["arduino"])).current;
+const ws = useRef(new WebSocket(WEBSOCKET_ENDPOINT, ["arduino"])).current;
+
+useEffect(() => {
+  ws.onopen = () => {
+    console.log("connected");
+    ws.send(
+      '{"command":"subscribe","identifier": "{\\"channel\\":\\"AirConditionerChannel\\"}"}'
+    );
+  };
+
+  ws.onmessage = (e) => {
+    console.log(e);
+  };
+
+  ws.onerror = (e) => {
+    console.log(e);
+  };
+
+  ws.onclose = (e) => {
+    console.log(e.code, e.reason);
+  };
+}, []);
+
+const togglePower = () => {
+  ws.send(
+    '{"command":"subscribe","identifier": "{"channel":"BoardChannel"}", "data": "{ "action": "toggle_power"}"}'
+  );
+};
+
+// // Prevent splash screen from
+// preventAutoHideAsync();
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />
-      <Provider store={store}>
+      {/* <Provider store={store}>
         <Navigation />
-      </Provider>
+      </Provider> */}
+      <SimpleButtonOnOff onClick={togglePower} />
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    color: Colors.neutral,
-  },
-});

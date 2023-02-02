@@ -3,29 +3,31 @@ import { View, Text, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { buildingData } from "../../../constants/floorPlanData";
 import { RootState } from "../../../store";
-import { setState } from "../../../store/slices/home";
+import { setLightsState } from "../../../store/slices/lights";
 import Line from "./Line";
 import RoomContainer from "./RoomContainer";
 import { builduingCoordinates, roomsCoordinates } from "./MapHelpers";
+import { current } from "@reduxjs/toolkit";
 
-const scale = 2.1
+const scale = 2.1;
 
 const Map: React.FC<{}> = (props) => {
   const dispatch = useDispatch();
-  const roomsData = useSelector((state: RootState) => state.home.rooms);
+  const roomsData = useSelector((state: RootState) => state.lights.rooms);
 
   useEffect(() => {
-    dispatch(setState({ rooms: roomsData, ac: { power: false } }));
+    dispatch(setLightsState(roomsData));
   }, []);
 
   return (
     <View>
       {roomsCoordinates(roomsData, scale).map((roomData) =>
-        roomData.geometry.coordinates.map((polygon, index) => (
+        roomData.geometry.coordinates.map((polygon, currentIndex) => (
           <RoomContainer
             coordinates={polygon}
             properties={roomData.properties}
-            key={roomData.properties.name + index}
+            key={roomData.properties.name + currentIndex}
+            currentIndex={currentIndex}
           />
         ))
       )}
@@ -38,6 +40,5 @@ const Map: React.FC<{}> = (props) => {
     </View>
   );
 };
-
 
 export default Map;

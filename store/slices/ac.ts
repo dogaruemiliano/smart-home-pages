@@ -8,10 +8,9 @@ import { BASE_URL } from "@constants/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchAuthorized } from "@services/ac/apiCalls";
 import { isAuthenticated, loginWithRefreshToken } from "@services/auth/authApi";
-import { camelCaseToSnakeCaseStr } from "@services/conversions";
 import { Alert } from "react-native";
 import { AppDispatch, RootState } from "..";
-import { refreshToken, setAuthState } from "./auth";
+import { setAuthState } from "./auth";
 
 const createAcAsyncThunk = (action: string) =>
   createAsyncThunk<
@@ -23,8 +22,11 @@ const createAcAsyncThunk = (action: string) =>
     if (isAuthenticated(thunkApi.getState().auth)) {
       token = "Bearer " + thunkApi.getState().auth.token;
     } else {
-      const data = await loginWithRefreshToken({refreshToken: thunkApi.getState().auth.refreshToken, username: thunkApi.getState().auth.username})
-      thunkApi.dispatch(setAuthState(data))
+      const data = await loginWithRefreshToken({
+        refreshToken: thunkApi.getState().auth.refreshToken,
+        username: thunkApi.getState().auth.username,
+      });
+      thunkApi.dispatch(setAuthState(data));
       token = "Bearer " + data.token;
     }
 
@@ -36,7 +38,7 @@ const createAcAsyncThunk = (action: string) =>
       }
     } catch (err: any) {
       console.log(err);
-      throw new Error(err.message);
+      return false;
     }
     // TODO correction needs to be done on the server as well if you changed the AC's state from the original remote
     console.log(`${action} in the state`);
@@ -70,6 +72,7 @@ export const fetchAcState = createAsyncThunk<AcSettings, boolean | undefined>(
 type AcState = {
   isLoading: boolean;
   correctionMode: boolean;
+  ws: WebSocket | null,
   settings: AcSettings;
 };
 
@@ -98,6 +101,9 @@ const acSlice = createSlice({
       state.settings.fanSpeed = data.fanSpeed;
       state.settings.temperature = data.temperature;
     },
+    setWS(state: AcState, action: PayloadAction<AcSettings>) {
+      state.ws = action.payload
+    }
   },
   extraReducers: (builder) => {
     // fetchAcState
@@ -114,26 +120,35 @@ const acSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(fetchAcState.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        // Alert.alert("There was an error in AC reducer", action.error.message, [
+        //   { text: "Close", style: "cancel" },
+        // ]);
+      }
       state.isLoading = false;
     });
 
     // togglePower
     builder.addCase(togglePower.pending, (state) => {
       state.isLoading = true;
+      state.settings.power = !state.settings.power;
     });
     builder.addCase(togglePower.fulfilled, (state, action) => {
-      if (action.payload) {
+      if (!action.payload) {
         state.settings.power = !state.settings.power;
+        console.log("error in togglePower fulfilled");
+        // Show error
       }
       state.isLoading = false;
     });
     builder.addCase(togglePower.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      state.settings.power = !state.settings.power;
+      console.log("error in togglePower fulfilled");
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert("There was an error in AC reducer", action.error.message, [
+          { text: "Close", style: "cancel" },
+        ]);
+      }
       state.isLoading = false;
     });
 
@@ -150,9 +165,11 @@ const acSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(raiseTemperature.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert("There was an error in AC reducer", action.error.message, [
+          { text: "Close", style: "cancel" },
+        ]);
+      }
       state.isLoading = false;
     });
 
@@ -170,9 +187,11 @@ const acSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(lowerTemperature.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert("There was an error in AC reducer", action.error.message, [
+          { text: "Close", style: "cancel" },
+        ]);
+      }
       state.isLoading = false;
     });
 
@@ -190,9 +209,11 @@ const acSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(changeFanSpeed.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert("There was an error in AC reducer", action.error.message, [
+          { text: "Close", style: "cancel" },
+        ]);
+      }
       state.isLoading = false;
     });
 
@@ -215,9 +236,11 @@ const acSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(changeMode.rejected, (state, action) => {
-      Alert.alert("There was an error", action.error.message, [
-        { text: "Close", style: "cancel" },
-      ]);
+      if (process.env.NODE_ENV === "development") {
+        Alert.alert("There was an error in AC reducer", action.error.message, [
+          { text: "Close", style: "cancel" },
+        ]);
+      }
       state.isLoading = false;
     });
   },

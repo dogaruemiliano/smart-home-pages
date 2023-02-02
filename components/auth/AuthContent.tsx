@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
-import FlatButton from "../UI/FlatButton";
 import AuthForm, { AuthData } from "./AuthForm";
 import { Colors } from "../../constants/styles";
 import { PasswordCredentials } from "../../services/auth/authApi";

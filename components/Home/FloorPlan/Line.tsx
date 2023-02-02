@@ -33,7 +33,7 @@ const stylesGenerator = (
       start: points[0][1] - lineWidth / 2,
       width: width,
       height: height,
-      backgroundColor: Colors.neutral,
+      backgroundColor: Colors.secondary,
     },
   });
 
