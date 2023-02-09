@@ -1,22 +1,38 @@
 {
   "files": {
-    "app.js": "/smart-home-pages/static/js/app.4cbec65e.chunk.js",
-    "app.js.map": "/smart-home-pages/static/js/app.4cbec65e.chunk.js.map",
+    "app.js": "/smart-home-pages/static/js/app.9f81670f.chunk.js",
+    "app.js.map": "/smart-home-pages/static/js/app.9f81670f.chunk.js.map",
     "runtime~app.js": "/smart-home-pages/static/js/runtime~app.50f79d4c.js",
     "runtime~app.js.map": "/smart-home-pages/static/js/runtime~app.50f79d4c.js.map",
-    "static/js/2.8d5d515a.chunk.js": "/smart-home-pages/static/js/2.8d5d515a.chunk.js",
-    "static/js/2.8d5d515a.chunk.js.map": "/smart-home-pages/static/js/2.8d5d515a.chunk.js.map",
+    "static/js/2.1c1d75cb.chunk.js": "/smart-home-pages/static/js/2.1c1d75cb.chunk.js",
+    "static/js/2.1c1d75cb.chunk.js.map": "/smart-home-pages/static/js/2.1c1d75cb.chunk.js.map",
+    "fonts/AntDesign.ttf": "/smart-home-pages/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/smart-home-pages/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/smart-home-pages/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/smart-home-pages/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/smart-home-pages/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/smart-home-pages/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Fontisto.ttf": "/smart-home-pages/./fonts/Fontisto.ttf",
+    "fonts/Foundation.ttf": "/smart-home-pages/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/smart-home-pages/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/smart-home-pages/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/smart-home-pages/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/smart-home-pages/./fonts/SimpleLineIcons.ttf",
     "favicon-16.png": "/smart-home-pages/favicon-16.png",
     "favicon-32.png": "/smart-home-pages/favicon-32.png",
     "favicon.ico": "/smart-home-pages/favicon.ico",
     "index.html": "/smart-home-pages/index.html",
     "manifest.json": "/smart-home-pages/manifest.json",
     "serve.json": "/smart-home-pages/serve.json",
-    "static/js/2.8d5d515a.chunk.js.LICENSE.txt": "/smart-home-pages/static/js/2.8d5d515a.chunk.js.LICENSE.txt"
+    "static/js/2.1c1d75cb.chunk.js.LICENSE.txt": "/smart-home-pages/static/js/2.1c1d75cb.chunk.js.LICENSE.txt",
+    "static/media/cold.png": "/smart-home-pages/static/media/cold.28e49a1b.png",
+    "static/media/hot.png": "/smart-home-pages/static/media/hot.a3bc03ae.png",
+    "static/media/off.png": "/smart-home-pages/static/media/off.a5b38215.png",
+    "static/media/on.png": "/smart-home-pages/static/media/on.c7cf9c21.png"
   },
   "entrypoints": [
     "static/js/runtime~app.50f79d4c.js",
-    "static/js/2.8d5d515a.chunk.js",
-    "static/js/app.4cbec65e.chunk.js"
+    "static/js/2.1c1d75cb.chunk.js",
+    "static/js/app.9f81670f.chunk.js"
   ]
 }
